@@ -1,6 +1,13 @@
 stages:  ##nama step yang kita gunakan dan urutannya
+  - test
   - build
   - deploy
+
+linting:
+  stage: test
+  image: registry.gitlab.com/pipeline-components/hadolint:latest
+  script:
+    - hadolint Dockerfile
 
 docker-build:
   image: docker:latest ## docker image yang kita gunakan
@@ -8,5 +15,5 @@ docker-build:
   services:
     - docker:dind
   script: ## perintah yang kita gunakan untuk build docker
-    - docker build -t duadagu/hello-nginx:$CI_COMMIT_SHORT_SHA .
+    - docker build -t roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA .
   when: manual
