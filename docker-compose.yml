@@ -1,0 +1,6 @@
+version: '3'
+services:
+  nginx:
+    image: roboticpuppies/hello-nginx:$IMAGE_TAG
+    ports:
+      - 80:80
