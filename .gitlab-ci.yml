@@ -34,3 +34,4 @@ deploy-ke-server:
     - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "mkdir -p demo-ci"
     - scp -o StrictHostKeyChecking=no docker-compose.yml $PRODUCTION_USERNAME@$PRODUCTION_HOST:demo-ci
     - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d"
+  when: manual
