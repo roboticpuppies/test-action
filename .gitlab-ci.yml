@@ -24,10 +24,8 @@ build-docker-image:
 deploy-ke-server:
   stage: deploy
   image: alpine
-  variables:
-	  GIT_STRATEGY: none  
   before_script:
-  	- apk add openssh-client
+    - apk add openssh-client
     - eval $(ssh-agent -s)
     - echo "$PRODUCTION_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
