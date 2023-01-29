@@ -9,22 +9,14 @@ dockerfile-lint:
   script:
     - hadolint Dockerfile
 
-image-build:
+build-image:
   image: docker:latest ## docker image yang kita gunakan
   stage: build ## nama stage
   services:
     - docker:dind
-  script: ## perintah yang kita gunakan untuk build docker
-    - docker build -t roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA .
-  when: manual
-
-image-push:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
   before_script:
     - echo $CI_REGISTRY_PASSWORD | docker login -u"$CI_REGISTRY_USERNAME" --password-stdin
-  script:
+  script: ## perintah yang kita gunakan untuk build docker
+    - docker build -t roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA .
     - docker push roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA
   when: manual
