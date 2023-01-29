@@ -1,0 +1,12 @@
+stages:  ##nama step yang kita gunakan dan urutannya
+  - build
+  - deploy
+
+docker-build:
+  image: docker:latest ## docker image yang kita gunakan
+  stage: build ## nama stage
+  services:
+    - docker:dind
+  script: ## perintah yang kita gunakan untuk build docker
+    - docker build -t duadagu/hello-nginx:$CI_COMMIT_SHORT_SHA .
+  when: manual
