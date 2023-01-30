@@ -4,3 +4,4 @@ services:
     image: roboticpuppies/hello-nginx:$IMAGE_TAG
     ports:
       - 80:80
+    restart: always
