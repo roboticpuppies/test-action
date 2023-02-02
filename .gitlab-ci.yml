@@ -41,7 +41,7 @@ deploy-ke-server-production:
   stage: deploy
   image: alpine
   before_script:
-    - apk add openssh-client
+    - apk add openssh-client gettext
     - eval $(ssh-agent -s)
     - echo "$PRODUCTION_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
