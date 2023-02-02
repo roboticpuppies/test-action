@@ -19,6 +19,7 @@ build-docker-image:
   script: ## perintah yang kita gunakan untuk build docker
     - docker build -t roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA .
     - docker push roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA
+  when: manual
 
 deploy-ke-server-development:
   stage: deploy
@@ -33,6 +34,7 @@ deploy-ke-server-development:
     - ssh -o StrictHostKeyChecking=no $STAGING_USERNAME@$STAGING_HOST "mkdir -p demo-ci"
     - scp -o StrictHostKeyChecking=no docker-compose.yml $STAGING_USERNAME@$STAGING_HOST:demo-ci
     - ssh -o StrictHostKeyChecking=no $STAGING_USERNAME@$STAGING_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d --force-recreate"
+  when: manual
 
 deploy-ke-server-production:
   stage: deploy
@@ -44,8 +46,8 @@ deploy-ke-server-production:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
   script:
-    - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "envsubst < .env.example > .env"
     - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "mkdir -p demo-ci"
-    - scp -o StrictHostKeyChecking=no docker-compose.yml $PRODUCTION_USERNAME@$PRODUCTION_HOST:demo-ci
-    - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d --force-recreate"
+    - scp -o StrictHostKeyChecking=no .env.example docker-compose.yml $PRODUCTION_USERNAME@$PRODUCTION_HOST:demo-ci
+    - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && envsubst < .env.example > .env"
+    # - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d --force-recreate"
   when: manual
