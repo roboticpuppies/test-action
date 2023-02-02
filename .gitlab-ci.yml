@@ -52,6 +52,5 @@ deploy-ke-server-production:
     - scp -o StrictHostKeyChecking=no .env docker-compose.yml $PRODUCTION_USERNAME@$PRODUCTION_HOST:demo-ci
     - echo "======== Isi dari .env sekarang ========="
     - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && cat .env"
-    - cat .env
     # - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d --force-recreate"
   when: manual
