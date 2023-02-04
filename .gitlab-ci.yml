@@ -3,39 +3,39 @@ stages:  ##nama step yang kita gunakan dan urutannya
   - build
   - deploy
 
-cek-dockerfile:
-  stage: test
-  image: registry.gitlab.com/pipeline-components/hadolint:latest
-  script:
-    - hadolint Dockerfile
-  when: manual
+# cek-dockerfile:
+#   stage: test
+#   image: registry.gitlab.com/pipeline-components/hadolint:latest
+#   script:
+#     - hadolint Dockerfile
+#   when: manual
 
-build-docker-image:
-  image: docker ## docker image yang kita gunakan
-  stage: build ## nama stage
-  services:
-    - docker:dind
-  before_script:
-    - echo $CI_REGISTRY_PASSWORD | docker login -u"$CI_REGISTRY_USERNAME" --password-stdin
-  script: ## perintah yang kita gunakan untuk build docker
-    - docker build -t roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA .
-    - docker push roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA
-  when: manual
+# build-docker-image:
+#   image: docker ## docker image yang kita gunakan
+#   stage: build ## nama stage
+#   services:
+#     - docker:dind
+#   before_script:
+#     - echo $CI_REGISTRY_PASSWORD | docker login -u"$CI_REGISTRY_USERNAME" --password-stdin
+#   script: ## perintah yang kita gunakan untuk build docker
+#     - docker build -t roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA .
+#     - docker push roboticpuppies/hello-nginx:$CI_COMMIT_SHORT_SHA
+#   when: manual
 
-deploy-ke-server-development:
-  stage: deploy
-  image: alpine
-  before_script:
-    - apk add openssh-client
-    - eval $(ssh-agent -s)
-    - echo "$STAGING_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-  script:
-    - ssh -o StrictHostKeyChecking=no $STAGING_USERNAME@$STAGING_HOST "mkdir -p demo-ci"
-    - scp -o StrictHostKeyChecking=no docker-compose.yml $STAGING_USERNAME@$STAGING_HOST:demo-ci
-    - ssh -o StrictHostKeyChecking=no $STAGING_USERNAME@$STAGING_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d --force-recreate"
-  when: manual
+# deploy-ke-server-development:
+#   stage: deploy
+#   image: alpine
+#   before_script:
+#     - apk add openssh-client
+#     - eval $(ssh-agent -s)
+#     - echo "$STAGING_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#   script:
+#     - ssh -o StrictHostKeyChecking=no $STAGING_USERNAME@$STAGING_HOST "mkdir -p demo-ci"
+#     - scp -o StrictHostKeyChecking=no docker-compose.yml $STAGING_USERNAME@$STAGING_HOST:demo-ci
+#     - ssh -o StrictHostKeyChecking=no $STAGING_USERNAME@$STAGING_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d --force-recreate"
+#   when: manual
 
 deploy-ke-server-production:
   stage: deploy
