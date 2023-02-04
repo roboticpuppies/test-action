@@ -47,9 +47,10 @@ deploy-ke-server-production:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
   script:
-    - envsubst < .env.example > .env 
+    #- envsubst < .env.example > .env 
     - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "mkdir -p demo-ci"
-    - scp -o StrictHostKeyChecking=no .env docker-compose.yml $PRODUCTION_USERNAME@$PRODUCTION_HOST:demo-ci
+    - scp -o StrictHostKeyChecking=no .env.example docker-compose.yml $PRODUCTION_USERNAME@$PRODUCTION_HOST:demo-ci
+    - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && envsubst < .env.example > .env"
     - echo "======== Isi dari .env sekarang ========="
     - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && cat .env"
     # - ssh -o StrictHostKeyChecking=no $PRODUCTION_USERNAME@$PRODUCTION_HOST "cd demo-ci && IMAGE_TAG=$CI_COMMIT_SHORT_SHA docker compose up -d --force-recreate"
