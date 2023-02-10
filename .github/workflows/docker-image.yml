@@ -20,5 +20,5 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v4
       with:
-        tags: roboticpuppies/hello-nginx:latest
+        tags: roboticpuppies/hello-nginx:${{ github.run_id }}
         push: true
